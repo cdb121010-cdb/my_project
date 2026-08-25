@@ -246,3 +246,82 @@ Vcap ──> 읽기 NFET의 gate ──> Iread
    테스트는 `pytest` 형식이지만 개발 의존성에 명시돼 있지 않아 이 환경에서는 `python3 -m pytest`가 실행되지 않았습니다 (`No module named pytest`). `pyproject.toml`에 optional test dependency를 추가하면 재현성이 좋아집니다.
 
 전반적으로는 교육용 또는 개인용 메모 CLI로 깔끔한 최소 구현입니다. 운영 수준으로 발전시키려면 파일 오류 처리와 원자적 저장부터 보완하는 것이 우선입니다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+현재 코드베이스는 JSON 파일에 메모를 저장하는 작은 Python CLI 패키지입니다.
+
+## 구성
+
+- 진입점: [cli.py](/home/choidabin/gpt/src/notes_cli/cli.py:56)
+- 패키징/명령 등록: [pyproject.toml](/home/choidabin/gpt/pyproject.toml:1)
+- 사용법: [README.md](/home/choidabin/gpt/README.md:1)
+- 테스트: [test_cli.py](/home/choidabin/gpt/tests/test_cli.py:1)
+
+지원 명령은 다음 네 가지입니다.
+
+- `add "내용"`: 메모 생성
+- `list`: 전체 조회
+- `show ID`: 메모 하나 조회
+- `remove ID`: 메모 삭제
+
+기본 저장소는 실행 폴더의 `.notes.json`이며, `--file`로 변경할 수 있습니다.
+
+## 구현 평가
+
+구조는 간결하고 목적에 맞습니다.
+
+- 표준 라이브러리만 사용하므로 가볍습니다.
+- `argparse` 기반 CLI와 `Path` 기반 파일 처리가 명확합니다.
+- 없는 저장 파일은 빈 목록으로 처리합니다. ([cli.py](/home/choidabin/gpt/src/notes_cli/cli.py:11))
+- 없는 메모 조회/삭제는 종료 코드 `1`로 처리합니다. ([cli.py](/home/choidabin/gpt/src/notes_cli/cli.py:72))
+- `pyproject.toml`에 `notes` 실행 명령이 등록돼 있어 설치 후 어느 폴더에서나 실행 가능합니다. ([pyproject.toml](/home/choidabin/gpt/pyproject.toml:11))
+
+직접 실행해 본 메모 생성 → 조회 → 삭제 → 없는 메모 조회 흐름은 정상 동작했습니다. 소스 컴파일도 통과했습니다.
+
+## 보완하면 좋은 점
+
+1. 잘못된 JSON 또는 손상된 데이터 처리
+   현재 JSON이 깨졌거나, 리스트 안의 항목에 `id`/`text`가 없으면 traceback이 그대로 노출됩니다. 사용자 친화적인 오류 메시지와 종료 코드를 추가하는 편이 좋습니다.
+
+2. 원자적 저장 부재
+   [save_notes](/home/choidabin/gpt/src/notes_cli/cli.py:22)는 대상 파일에 바로 씁니다. 저장 중 프로세스가 중단되면 JSON 파일이 손상될 수 있습니다. 임시 파일에 쓴 뒤 교체하는 방식이 안전합니다.
+
+3. 동시 실행 충돌
+   두 `add` 프로세스가 동시에 실행되면 둘 다 같은 다음 ID를 계산하거나 한쪽 저장 결과가 다른 쪽을 덮어쓸 수 있습니다. 개인용 단일 프로세스 도구에는 괜찮지만, 확장 시 잠금이 필요합니다.
+
+4. 테스트 범위
+   현재 lifecycle 하나만 검증합니다. ([test_cli.py](/home/choidabin/gpt/tests/test_cli.py:19))
+   빈 목록, 여러 메모의 ID 증가, 잘못된 JSON, 잘못된 ID/명령, `--file`의 상위 디렉터리 생성 등을 추가하면 좋습니다.
+
+5. 테스트 의존성 선언
+   테스트는 `pytest` 형식이지만 개발 의존성에 명시돼 있지 않아 이 환경에서는 `python3 -m pytest`가 실행되지 않았습니다 (`No module named pytest`). `pyproject.toml`에 optional test dependency를 추가하면 재현성이 좋아집니다.
+
+전반적으로는 교육용 또는 개인용 메모 CLI로 깔끔한 최소 구현입니다. 운영 수준으로 발전시키려면 파일 오류 처리와 원자적 저장부터 보완하는 것이 우선입니다.
