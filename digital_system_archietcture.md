@@ -7,8 +7,7 @@
 ## 원본 PDF
 
 디지털 시스템 설계 기말보고서 (2025-06-20)
-<pdf source="file://%7B%22source%22%3A%22attachment%3Ac1eca70e-ddff-4610-a78c-c99e334f2d36%3A38e7c76a-adb4-43d4-8239-3d1cd26e7d58.pdf%22%2C%22permissionRecord%22%3A%7B%22table%22%3A%22block%22%2C%22id%22%3A%2202057712-b737-44c0-932e-4205abaec6b2%22%2C%22spaceId%22%3A%22ae7c1a9e-de09-81f8-ab1e-0003cf47970a%22%7D%7D">
-</pdf>
+[디지털 시스템 설계 기말보고서 (2025-06-20)](디지털 시스템 설계 기말보고서.pdf)
 
 ---
 
