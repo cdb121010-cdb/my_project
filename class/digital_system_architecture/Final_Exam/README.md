@@ -12,9 +12,10 @@ PC 터미널(UART)에서 RGB 색상 값(0~255)을 입력받아 FPGA 보드 상�
 
 ---
 
-## 📌 주요 링크
+## 📌 주요 링크 및 문서
 
 - 🎥 **YouTube 시연 영상 (Shorts)**: [시연 영상 바로가기](https://youtube.com/shorts/Qn91vLUIbvw)
+- 📑 **기말과제 상세 보고서 (PDF)**: [`디지털 시스템 설계 기말보고서.pdf`](디지털%20시스템%20설계%20기말보고서.pdf)
 - 📖 **Notion 상세 프로젝트 보고서**: [디지털 시스템 설계 노션 페이지](https://safe-fiber-e17.notion.site/APB-RGB-LED-4cc45fa1068a4a7588f36212641a8207?source=copy_link)
 
 ---
@@ -146,6 +147,7 @@ class/digital_system_architecture/Final_Exam/
 │   └── constr.xdc              # Nexys A7 핀 맵핑 및 클럭 제약 조건
 ├── software/
 │   └── main.c                  # MicroBlaze용 Vitis Baremetal C 펌웨어
+├── 디지털 시스템 설계 기말보고서.pdf   # 기말과제 제출 최종 보고서
 └── README.md                   # 프로젝트 소개 및 기술 문서
 ```
 
