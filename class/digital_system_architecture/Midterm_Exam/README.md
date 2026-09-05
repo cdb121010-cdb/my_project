@@ -1,4 +1,4 @@
-# MicroBlaze 기반 스위치 및 UART LED 제어 시스템 (Midterm Exam)
+# MicroBlaze 기반 스위치 및 UART LED 제어 시스템
 
 ![Vivado](https://img.shields.io/badge/Vivado-2023.1-blue.svg)
 ![Vitis](https://img.shields.io/badge/Vitis-2023.1-orange.svg)
