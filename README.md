@@ -10,3 +10,6 @@
   - [디지털 시스템 설계 (Digital System Architecture)](class/digital_system_architecture/)
     - [중간과제: MicroBlaze 기반 스위치 및 UART LED 제어 (Midterm_Exam)](class/digital_system_architecture/Midterm_Exam/)
     - [기말과제: APB 기반 RGB LED 제어 시스템 (Final_Exam)](class/digital_system_architecture/Final_Exam/)
+  - [디지털 회로 설계 (Digital Circuit Design)](class/digital_circuit_design/)
+    - [중간과제: FPGA 기반 디지털 시계 설계 (Midterm_Exam)](class/digital_circuit_design/Midterm_Exam/)
+    - [기말과제: 3-bit 구조적 곱셈기 텀프로젝트 (Final_Exam)](class/digital_circuit_design/Final_Exam/)
