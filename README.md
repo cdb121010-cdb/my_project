@@ -13,3 +13,6 @@
   - [디지털 회로 설계 (Digital Circuit Design)](class/digital_circuit_design/)
     - [중간과제: FPGA 기반 디지털 시계 설계 (Midterm_Exam)](class/digital_circuit_design/Midterm_Exam/)
     - [기말과제: 3-bit 구조적 곱셈기 텀프로젝트 (Final_Exam)](class/digital_circuit_design/Final_Exam/)
+  - [마이크로프로세서 (Microprocessor)](class/microprocessor/)
+    - [기말과제: ATmega128 기반 듀얼 모드 스탑워치 및 타이머 시스템 (Final_Exam)](class/microprocessor/Final_Exam/)
+
