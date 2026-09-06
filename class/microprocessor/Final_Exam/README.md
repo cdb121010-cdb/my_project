@@ -15,6 +15,7 @@ PC 시리얼 터미널(Tera Term)과의 실시간 양방향 통신(명령 수신
 
 ## 📌 주요 문서 및 소스코드 바로가기
 
+- 📑 **기말과제 결과보고서 (PDF)**: [`마이크로프로세서 기말보고서.pdf`](마이크로프로세서%20기말보고서.pdf)
 - 📑 **요구사항 및 동작 검증 명세서**: [`▪스탑워치 타이머만들기.txt`](docs/▪스탑워치%20타이머만들기.txt)
 - 💻 **펌웨어 C 소스코드**: [`final.c`](src/final.c)
 
@@ -42,26 +43,26 @@ PC 시리얼 터미널(Tera Term)과의 실시간 양방향 통신(명령 수신
 
 ```mermaid
 graph TD
-    PC[PC Serial Terminal<br/>Tera Term 9600bps] <-->|USART1 RX/TX<br/>PD2/PD3 에코 & 명령 파싱| MCU
+    PC["PC Serial Terminal<br/>Tera Term 9600bps"] <-->|USART1 RX/TX<br/>PD2/PD3 에코 & 명령 파싱| MCU
     
-    subgraph MCU [ATmega128 Microcontroller 14.7456MHz]
-        subgraph Interrupts [하드웨어 인터럽트]
-            T1_ISR["Timer1 CTC ISR (10ms Periodic)<br/>- 0.01초 카운터 증감<br/>- 타이머 완료 시 UART 알림"]
-            UART_ISR["USART1 RX ISR<br/>- 터미널 문자 즉시 에코 (Echo)<br/>- 개행문자 수신 시 명령 버퍼 파싱"]
+    subgraph MCU ["ATmega128 Microcontroller (14.7456MHz)"]
+        subgraph Interrupts ["하드웨어 인터럽트"]
+            T1_ISR["Timer1 CTC ISR (10ms 주기)<br/>- 0.01초 카운터 증감<br/>- 타이머 완료 시 UART 알림"]
+            UART_ISR["USART1 RX ISR<br/>- 터미널 문자 즉시 에코<br/>- 개행문자 수신 시 명령 버퍼 파싱"]
         end
         
-        subgraph MainLoop [메인 루프 while(1)]
-            BTN_HANDLER["handle_buttons()<br/>- PD0: Start / Pause 토글<br/>- PD1: Reset (정지 상태에서만 인가)<br/>- 소프트웨어 50ms 채터링 방지"]
-            FND_HANDLER["display_fnd()<br/>- 4자리 FND 동적 스캔 (2ms 간격)<br/>- 1초 자리 소수점(DP) 점등 제어"]
+        subgraph MainLoop ["메인 루프"]
+            BTN_HANDLER["handle_buttons()<br/>- PD0: Start/Pause 토글<br/>- PD1: Reset (정지 상태에서만 인가)<br/>- 소프트웨어 50ms 채터링 방지"]
+            FND_HANDLER["display_fnd()<br/>- 4자리 FND 동적 스캔 (2ms 간격)<br/>- 1초 자리 소수점 점등 제어"]
         end
         
         UART_ISR -->|M0, M1, Txx, TP, TR| MainLoop
         T1_ISR -->|g_time_counter 갱신| FND_HANDLER
     end
 
-    BTN_HANDLER -->|입력 감지| BTN[푸시버튼 스위치<br/>PD0: Start/Pause, PD1: Reset]
-    FND_HANDLER -->|세그먼트 데이터 8-bit| PORTB[FND 데이터 포트<br/>PORTB: a~g, dp]
-    FND_HANDLER -->|자리수 제어 4-bit| PORTE[FND 공통 제어선<br/>PORTE: PE4~PE7]
+    BTN_HANDLER -->|입력 감지| BTN["푸시버튼 스위치<br/>PD0: Start/Pause, PD1: Reset"]
+    FND_HANDLER -->|세그먼트 데이터 8-bit| PORTB["FND 데이터 포트<br/>PORTB: a~g, dp"]
+    FND_HANDLER -->|자리수 제어 4-bit| PORTE["FND 공통 제어선<br/>PORTE: PE4~PE7"]
 ```
 
 ---
@@ -129,20 +130,20 @@ stateDiagram-v2
 
     STOPWATCH_STOP --> STOPWATCH_RUN : PD0 누름 (Start)
     STOPWATCH_RUN --> STOPWATCH_STOP : PD0 누름 (Pause)
-    STOPWATCH_STOP --> STOPWATCH_STOP : PD1 누름 (Reset -> 00.00)
+    STOPWATCH_STOP --> STOPWATCH_STOP : PD1 누름 (00.00 리셋)
     STOPWATCH_RUN --> STOPWATCH_RUN : PD1 누름 (무시됨)
     
     STOPWATCH_STOP --> TIMER_STANDBY : M1 명령 수신
-    STOPWATCH_RUN --> TIMER_STANDBY : M1 명령 수신 (즉시 리셋 전환)
+    STOPWATCH_RUN --> TIMER_STANDBY : M1 명령 수신
     
-    TIMER_STANDBY --> TIMER_RUN : T+시간 (예: T30) 명령 수신
-    TIMER_RUN --> TIMER_PAUSE : TP 명령 수신 (Pause)
-    TIMER_PAUSE --> TIMER_RUN : TR 명령 수신 (Resume)
-    TIMER_RUN --> TIMER_STANDBY : 시간 만료 (00.00 도달 후 완료 메시지 출력)
+    TIMER_STANDBY --> TIMER_RUN : T 명령 수신 (예: T30)
+    TIMER_RUN --> TIMER_PAUSE : TP 명령 수신
+    TIMER_PAUSE --> TIMER_RUN : TR 명령 수신
+    TIMER_RUN --> TIMER_STANDBY : 시간 만료 (00.00 도달)
     
     TIMER_STANDBY --> STOPWATCH_STOP : M0 명령 수신
-    TIMER_RUN --> STOPWATCH_STOP : M0 명령 수신 (즉시 리셋 전환)
-    TIMER_PAUSE --> STOPWATCH_STOP : M0 명령 수신 (즉시 리셋 전환)
+    TIMER_RUN --> STOPWATCH_STOP : M0 명령 수신
+    TIMER_PAUSE --> STOPWATCH_STOP : M0 명령 수신
 ```
 
 ---
@@ -186,5 +187,6 @@ class/microprocessor/Final_Exam/
 │   └── ▪스탑워치 타이머만들기.txt  # 과제 요구사항 및 검증 명세서 원본
 ├── src/
 │   └── final.c                  # ATmega128 펌웨어 전체 소스코드 (인터럽트, UART, FND)
+├── 마이크로프로세서 기말보고서.pdf   # 📑 기말과제 최종 결과보고서
 └── README.md                    # 기말과제 상세 기술 문서
 ```
